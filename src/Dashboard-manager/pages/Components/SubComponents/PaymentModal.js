@@ -1,17 +1,28 @@
 import axios from 'axios'
-import { getCookie } from '../../../../Helper/helper'
-import { useState } from 'react'
+
+import { useReactToPrint,PrintContextConsumer } from 'react-to-print';
+import PrintReceipt from './PrintReceipt';
+import { useRef } from 'react';
+
+
 
 const PaymentModal = ({ content }) => {
 
+    const componentRef = useRef();
+    const HandlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
+
     const onClose = () => {
-       const id = document.getElementById('PaymentModal');
-       id.style.display = "none";
+        const id = document.getElementById('PaymentModal');
+        id.style.display = "none";
     }
 
     let TotalPrice = 0;
     return (
-        <div className="bg-white-200 fixed inset-0 z-50" id="PaymentModal" style={{display:"none"}}>
+    <>
+        <PrintReceipt ref={componentRef}  data={content} />
+        <div className="bg-white-200 fixed inset-0 z-50" id="PaymentModal" style={{ display: "none" }}>
             <div className="flex h-screen justify-center items-center ">
                 <div className="flex-col justify-center  bg-white py-12 px-14 border-2 border-grey-500 rounded-xl ">
                     <button type="button" onClick={onClose} class="float-right text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -78,7 +89,7 @@ const PaymentModal = ({ content }) => {
                                         </td>
                                     </tr>
                                 </table>
-                                <hr/>
+                                <hr />
                                 <h3 class="mb-4 font-semibold text-gray-900 dark:text-white mt-2">Payment method</h3>
                                 <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                     <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
@@ -94,14 +105,18 @@ const PaymentModal = ({ content }) => {
                                         </div>
                                     </li>
                                 </ul>
-                                <button type="submit" class="ml-2 mt-5 text-white bg-[#04d1b2] focus:ring-1 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Generate bills</button>
+                           
+                            <button type="submit" onClick={HandlePrint} class="ml-2 mt-5 text-white bg-[#04d1b2] focus:ring-1 focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Generate bills</button>
                                 <hr />
+                                
                             </li>
                         </ul>
                     </div>
+                    
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
