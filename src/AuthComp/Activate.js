@@ -4,6 +4,7 @@ import { isAuth ,signOut} from '../Helper/helper'
 import MessageDisplay from './Helper/MessageDisplay'
 import eimg from './Images/email.jpeg'
 
+
 const center = {
     "position": "absolute",
     "top": "40%",
@@ -49,6 +50,11 @@ const Activate = () => {
             }, 3000);
     }
 
+    const logout = () => {
+         signOut();
+         window.location.reload();
+    }
+
 
     return (
         <div className="container" style={center}>
@@ -60,6 +66,8 @@ const Activate = () => {
                     <p className="subtitle is-5" style={{ 'color': "grey", "letterSpacing": "0.4px" }}>We have send an email for verification.Please check your inbox.</p>
                     <p className="subtitle is-6 mt-6 mb-3" style={{ 'color': "grey", "fontSize": "14px" }}>Have't got any mail yet? </p>
                     <button className="button is-primary  is-small" onClick={onResend} disabled={loading ? true : false}>Resend verification link</button>
+
+                    <button className="button is-primary   ml-4 is-small" onClick={logout} >Sign out</button>
                 </div>
                 <div className="column is-two-thirds">
                     <img src={eimg} alt="desc" />

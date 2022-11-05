@@ -7,24 +7,18 @@ import { isAuth,getCookie } from '../../Helper/helper';
 
 
 
-const data01 = [
-    { name: 'Shankhamul Outlet', value: 15647.5 },
-    { name: 'Durbarmarg Outlet', value: 20078.6 },
-    { name: 'Jawalakhel Outlet', value: 7849.7},
-    { name: 'Balkumari Outlet', value: 4575.6 },
-];
+
+
 
 
 
 
 const CustomTooltip = ({ active, payload }) => {
- 
-
 
     if (active && payload && payload.length) {
         return (
             <div className="custom-tooltip bg-[#04d1b2] p-2 active:outline-none " style={{ border: '1px solid white' }}>
-                <p className="label" style={{ color: 'white' }}>{`${payload[0].name} : Rs. ${payload[0].value}`}</p>
+                <p className="label" style={{ color: 'white' }}>{`${payload[0].name} : Rs. ${payload[0]?.value}`}</p>
             </div>
         );
     }
@@ -71,6 +65,29 @@ const Home = () => {
             .catch(e => console.log(e));
     },[])
 
+    const [Data, SetData] = useState();
+    const getOutlet = async () => {
+        return await axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API}/api/GetDailyAdmin`,
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token')
+            }
+        })
+    }
+
+    useEffect(() => {
+        getOutlet()
+            .then(res => {
+                let dataOutlet = res?.data;
+                SetData((preState) => {
+                    return {dataOutlet}
+                })
+                console.log(Data);
+            })
+            .catch(e => console.log(e));
+    }, [])
+
 
 
     return (
@@ -84,9 +101,9 @@ const Home = () => {
                             <ResponsiveContainer className="lg:mt-[-2rem]" width="100%" height="100%">
                                 <PieChart width={600} height={600}>
                                     <Pie
-                                        dataKey="value"
+                                        dataKey="amount"
                                         isAnimationActive={false}
-                                        data={data01}
+                                        data={Data?.dataOutlet}
                                         labelLine={false}
                                         cx="50%"
                                         cy="50%"
@@ -94,7 +111,7 @@ const Home = () => {
                                         fill="#8884d8"
                                         label={renderCustomizedLabel}
                                     >
-                                        {data01.map((entry, index) => (
+                                        {Data?.dataOutlet?.map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>

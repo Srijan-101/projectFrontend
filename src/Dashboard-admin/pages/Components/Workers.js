@@ -3,6 +3,7 @@ import axios from 'axios';
 import { isAuth, getCookie } from "../../../Helper/helper";
 
 
+
 const Workers = () => {
 
     const [worker, setWorker] = useState([]);
@@ -22,10 +23,11 @@ const Workers = () => {
     useEffect(() => {
         getOutlet()
             .then(res => {
-                let workers = res.data;
+                let workersData = res.data;
                 setWorker((preState) => {
-                    return { ...preState, workers }
+                    return { workersData }
                 })
+                //console.log(worker?.workersData[0].Worker);
             })
             .catch(e => console.log(e));
     }, [])
@@ -61,28 +63,33 @@ const Workers = () => {
                 </thead>
                 <tbody>
                     {
-                        worker?.workers?.map((ele) => {
-                            console.log(ele);
-                            return (
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <td scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white">
-                                        <img class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Jese image" />
-                                        <div class="pl-3">
-                                            <div class="text-base font-semibold">{ele.firstName} {ele.lastName}</div>
-                                            <div class="font-normal text-gray-500">{ele.email}</div>
-                                        </div>
-                                    </td>
-                                    <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {ele?.Post ? ele?.Post : "Worker"}
-                                    </th>
-                                    <td class="py-4 px-6">
-                                        {ele?.Outlet?.outletName ? ele?.Outlet?.outletName : "-"}
-                                    </td>
 
-                                    <td class="py-4 px-6">
-                                        {ele.phoneNumber ? ele.phoneNumber  : "-"}
-                                    </td>
-                                </tr>
+                        worker?.workersData?.map((k) => {
+                            return (
+                                k?.Worker?.map((ele) => {
+                                   return(
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                        <td scope="row" class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white">
+                                            <img class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Jese image" />
+                                            <div class="pl-3">
+                                                <div class="text-base font-semibold">{ele.firstName} {ele.lastName}</div>
+                                                <div class="font-normal text-gray-500">{ele.email}</div>
+                                            </div>
+                                        </td>
+                                        <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {ele?.Post ? ele?.Post : "Worker"}
+                                        </th>
+                                        <td class="py-4 px-6">
+                                            {ele?.Outlet?.outletName ? ele?.Outlet?.outletName : "-"}
+                                        </td>
+
+                                        <td class="py-4 px-6">
+                                            {ele.phoneNumber ? ele.phoneNumber : "-"}
+                                        </td>
+                                    </tr>
+                                   )
+
+                                })
                             )
                         })
                     }

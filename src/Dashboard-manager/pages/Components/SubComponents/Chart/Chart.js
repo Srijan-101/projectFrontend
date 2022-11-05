@@ -10,61 +10,17 @@ import {
   Legend
 } from "recharts";
 
-const data = [
-  {
-    name: "Jan",
-    data: 2400,
-  },
-  {
-    name: "Feb",
-    data: 1398,
-  },
-  {
-    name: "Mar",
-    data: 9800,
-  },
-  {
-    name: "Apr",
-    data: 3908,
-  },
-  {
-    name: "May",
-    data: 4800,
-  },
-  {
-    name: "Jun",
-    data: 3800,
-  },
-  {
-    name: "Jul",
-    data: 4300,
-  },
-  {
-    name: "Aug",
-    data: 4300,
-  },
-  {
-    name: "Sep",
-    data: 4310,
-  },
-  {
-    name: "Oct",
-    data: 4320,
-  },
-  {
-    name: "Nov",
-    data: 430,
-  },
-  {
-    name: "Dec",
-    data: 3450,
-  }
-];
+import axios  from "axios";
+import { useState ,useEffect} from "react";
+import { getCookie ,isAuth} from "../../../../../Helper/helper";
+
+
 
 
 
 
 const CustomTooltip = ({ active, payload, label }) => {
+
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip bg-[#04d1b2] p-2 active:outline-none hover:border-white focus:outline-none" style={{ border: '1px solid white' }}>
@@ -77,11 +33,33 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Chart() {
+  const [Data,SetData] = useState();
+
+  const GetMonthlyData = async () => {
+    return await axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API}/api/GetMonthly/${isAuth().outletId}`,
+      headers: {
+          'Authorization': 'Bearer ' + getCookie('token')
+      },
+  })
+  }
+
+  useEffect(() => {
+    GetMonthlyData()
+        .then(res => {
+              SetData(res.data);
+        }) 
+        .catch((e) => console.log(e));
+        
+}, []);
+
+
   return (
     <BarChart
       width={700}
       height={300}
-      data={data}
+      data={Data}
       margin={{
         top: 5,
         right: 30,
@@ -94,7 +72,7 @@ export default function Chart() {
       <YAxis />
       <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Bar dataKey="data" barSize={20} fill="#8884d8" />
+      <Bar dataKey="amount" barSize={20} fill="#8884d8" />
     </BarChart>
   );
 }

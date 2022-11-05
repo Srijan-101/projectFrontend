@@ -1,7 +1,33 @@
 import React from 'react'
-import Chart from './Components/SubComponents/Chart/Chart';
-
+import { isAuth, getCookie } from '../../Helper/helper'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import MenuTable from "./Components/MenuTable";
 const Home = () => {
+
+    const [outlet, setOutlet] = useState([]);
+    const getOutlet = async () => {
+        return await axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API}/api/GetOutletbyId/${isAuth().outletId}`,
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token')
+            },
+        })
+    }
+
+    useEffect(() => {
+        getOutlet()
+            .then(res => {
+                let dataOutlet = res.data;
+                setOutlet((preState) => {
+                    return { ...preState, dataOutlet }
+                })
+                console.log(outlet);
+            })
+            .catch(e => console.log(e));
+
+    }, [])
     return (
         <>
             <div class="flex-1 max-w-5xl md:max-w-5xl mx-6 p-1 mt-5 mb-[20rem]">
@@ -19,56 +45,29 @@ const Home = () => {
                                 <div class="flex items-center py-4 px-6 text-gray-900 whitespace-nowrap dark:text-white">
                                     <img class="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Jese image" />
                                     <div class="pl-3">
-                                        <div class="text-base font-semibold">Srijan kc</div>
-                                        <div class="font-normal text-gray-500">srijan.kc@gmail.com</div>
+
+                                        <div class="text-base font-semibold">{isAuth().firstName} {isAuth().lastName}</div>
+                                        <div class="font-normal text-gray-500">{isAuth().email}</div>
+
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
                 <hr />
-
-                <div class="flex-1 mt-2 mb-[9rem]">
-                    <div class="flex-1 max-w-4xl md:max-w-5xl mx-auto p-1 mt-2">
-                        <h1 className="font-semibold text-2xl mb-1 ml-2">No active update</h1>
-                        <ul class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:gap-1">
-                            <div id="alert-3" class="flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200" role="alert">
-                                <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5 text-green-700 dark:text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                                <span class="sr-only">Info</span>
-                                <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
-                                     <span class="font-bold text-lg">Table 1 : </span>Chicken chilly is ready.
-                                </div>
-                                <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-green-200 dark:text-green-600 dark:hover:bg-green-300" data-dismiss-target="#alert-3" aria-label="Close">
-                                    <span class="sr-only">Close</span>
-                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                </button>
+                <div class="flex-1 max-w-6xl md:max-w-6xl mx-auto p-1 mt-6">
+                    <ul class="grid grid-cols-1">
+                        <li className='w-full mt-[-2rem] '>
+                            <div class="flex-1 max-w-6xl md:max-w-6xl mx-auto p-1 mt-3">
+                                <h1 className="font-semibold text-2xl mb-1 ml-2">Menu</h1>
                             </div>
-                            <div id="alert-3" class="flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200" role="alert">
-                                <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5 text-green-700 dark:text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                                <span class="sr-only">Info</span>
-                                <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
-                                     <span class="font-bold text-lg">Table 1 : </span>Chicken chilly is ready.
-                                </div>
-                                <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-green-200 dark:text-green-600 dark:hover:bg-green-300" data-dismiss-target="#alert-3" aria-label="Close">
-                                    <span class="sr-only">Close</span>
-                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                </button>
-                            </div>
-                            <div id="alert-3" class="flex p-4 mb-4 bg-green-100 rounded-lg dark:bg-green-200" role="alert">
-                                <svg aria-hidden="true" class="flex-shrink-0 w-5 h-5 text-green-700 dark:text-green-800" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-                                <span class="sr-only">Info</span>
-                                <div class="ml-3 text-sm font-medium text-green-700 dark:text-green-800">
-                                     <span class="font-bold text-lg">Table 1 : </span>Chicken chilly is ready.
-                                </div>
-                                <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-100 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex h-8 w-8 dark:bg-green-200 dark:text-green-600 dark:hover:bg-green-300" data-dismiss-target="#alert-3" aria-label="Close">
-                                    <span class="sr-only">Close</span>
-                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                </button>
-                            </div>
-                        </ul>
-                    </div>
+                            <MenuTable className="mt-4" />
+                        </li>
+                    </ul>
                 </div>
+                
             </div>
         </>
     )

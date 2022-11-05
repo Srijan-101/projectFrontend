@@ -52,7 +52,7 @@ const AddMenu = ({Flag,setFlag}) => {
             setMessage({ error: true, message: data.data.message, type: "is-primary" })
             Flag ? setFlag(false) : setFlag(true)
             setLoading(false);
-            setValues({});
+            setValues(InitialValues);
         } catch (error) {
             Flag ? setFlag(false) : setFlag(true)
             setMessage({ error: true, message: error.response.data.error, type: "is-danger" })

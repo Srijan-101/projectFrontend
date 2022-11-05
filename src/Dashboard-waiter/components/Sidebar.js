@@ -23,7 +23,7 @@ const Sidebar = () => {
 
     const Menus = [
         { title: 'Home', path: '/', src: <FontAwesomeIcon icon={faHouse} />},
-        { title: 'Menu', path: '/menu',  src: <FontAwesomeIcon icon={faUtensils} />},
+        
         {title: 'Tables' , path:'/tables',src: <MdChair/>},
         // { title: 'Settings', path: '/Settings', src: <FaRegSun />},
     ]

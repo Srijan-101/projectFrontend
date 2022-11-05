@@ -1,5 +1,9 @@
 
 import React from "react";
+import { useState,useEffect } from "react";
+import axios from 'axios';
+import { getCookie } from "../../../../../Helper/helper";
+
 import {
   BarChart,
   Bar,
@@ -9,6 +13,7 @@ import {
   Tooltip,
   Legend
 } from "recharts";
+import { useParams } from "react-router-dom";
 
 const data = [
   {
@@ -77,11 +82,34 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Chart() {
+  const [Data,SetData] = useState();
+  const params = useParams();
+
+  const GetMonthlyData = async () => {
+    return await axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API}/api/GetMonthly/${params.id}`,
+      headers: {
+          'Authorization': 'Bearer ' + getCookie('token')
+      },
+  })
+  }
+
+  useEffect(() => {
+    GetMonthlyData()
+        .then(res => {
+              SetData(res.data);
+        }) 
+        .catch((e) => console.log(e));
+        
+}, []);
+
+
   return (
     <BarChart
       width={700}
       height={300}
-      data={data}
+      data={Data}
       margin={{
         top: 5,
         right: 30,
@@ -94,7 +122,7 @@ export default function Chart() {
       <YAxis />
       <Tooltip content={<CustomTooltip />} />
       <Legend />
-      <Bar dataKey="data" barSize={20} fill="#8884d8" />
+      <Bar dataKey="amount" barSize={20} fill="#8884d8" />
     </BarChart>
   );
 }

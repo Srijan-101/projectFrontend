@@ -13,9 +13,6 @@ const OutletInformation = ({ values, onChange, setMessage, setLoading, loading, 
             url: `${process.env.REACT_APP_API}/api/GetOutlet`,
             headers: {
                 'Authorization': 'Bearer ' + getCookie('token')
-            },
-            data: {
-                email: isAuth().email
             }
         })
     }
@@ -23,7 +20,7 @@ const OutletInformation = ({ values, onChange, setMessage, setLoading, loading, 
     useEffect(() => {
         getOutlet()
             .then(res => {
-                let dataOutlet = res.data;
+                let dataOutlet = res?.data;
                 setOutlet((preState) => {
                     return { ...preState, dataOutlet }
                 })
@@ -60,41 +57,41 @@ const OutletInformation = ({ values, onChange, setMessage, setLoading, loading, 
                         </tr>
                     </thead>
                     <tbody>
+                        
+                        
 
-                        {
+                        {   
                             outlet?.dataOutlet?.map((ele) => {
                                 return (
                                     <tr key={ele.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                         <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {ele.outletName}
+                                            {ele?.outletName}
                                         </th>
                                         <td className="py-4 px-5">
-                                            {ele.location}
+                                            {ele?.location}
                                         </td>
 
                                          <td scope="row" className="flex items-center py-4 px-5 text-gray-900 whitespace-nowrap dark:text-white">
                                             <img className="w-10 h-10 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Jese image" />
                                             <div className="pl-3">
-                                                <div className="text-base font-semibold">{ele.Worker[0].firstName} {ele.Worker[0].lastName}</div>
-                                                <div className="font-normal text-gray-500">{ele.Worker[0].email}</div>
+                                                <div className="text-base font-semibold">{ele?.Worker[0]?.firstName} {ele.Worker[0]?.lastName}</div>
+                                                <div className="font-normal text-gray-500">{ele?.Worker[0]?.email}</div>
                                             </div>
                                         </td> 
 
                                         <td className="py-4 px-5">
-                                            {ele.phone}
+                                            {ele?.phone}
                                         </td>
                                         <td className="py-4 px-6 text-right">
                                             <Link href="" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" to={{
-                                                 pathname : `../viewOutlet/${ele.id}`,
+                                                 pathname : `../viewOutlet/${ele?.id}`,
                                                  
                                             }} relative="path">View</Link>
                                         </td>
                                     </tr>
                                 )
                             })
-                        }
-
-
+                        } 
                     </tbody>
                 </table>
             </div>

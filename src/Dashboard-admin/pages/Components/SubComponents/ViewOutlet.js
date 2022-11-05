@@ -13,6 +13,37 @@ const ViewOutlet = () => {
     const id = useParams().id;
     const [outlet, setOutlet] = useState([]);
 
+    const [DailySales, SetDailySales] = useState({
+        Dailysale: 0
+    })
+    const getDailySales = async () => {
+        return await axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API}/api/GetDaily/${id}`,
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token')
+            },
+        })
+    }
+
+    const onDownload =  async () => {
+        await axios({
+           method: 'GET',
+           url: `${process.env.REACT_APP_API}/api/GenerateCSV/${id}`,
+           headers: {
+               'Authorization': 'Bearer ' + getCookie('token')
+           },
+           responseType : 'blob'
+       }).then((res) => {
+           const url = window.URL.createObjectURL(new Blob([res.data]));
+           const link = document.createElement('a');
+           link.href = url;
+           link.setAttribute('download', 'data.csv'); //or any other extension
+           document.body.appendChild(link);
+           link.click();
+       }) 
+}
+
     const getOutlet = async () => {
         return await axios({
             method: 'GET',
@@ -24,6 +55,7 @@ const ViewOutlet = () => {
     }
 
     useEffect(() => {
+
         getOutlet()
             .then(res => {
                 let dataOutlet = res.data;
@@ -33,6 +65,15 @@ const ViewOutlet = () => {
                 console.log(outlet?.dataOutlet?.OutletInformation);
             })
             .catch(e => console.log(e));
+
+            getDailySales()
+            .then(res => {
+                SetDailySales({
+                    Dailysale: parseFloat(res.data)
+                })
+            })
+            .catch((e) => console.log(e));
+
     }, [])
 
     return (
@@ -69,7 +110,7 @@ const ViewOutlet = () => {
                 </div>
                 <div class="mt-5 flex lg:mt-0 lg:ml-4 ">
                     <span class="sm:block">
-                        <button type="button" class="inline-flex mr-2 items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" >
+                        <button type="button" onClick={onDownload} class="inline-flex mr-2 items-center rounded-md border border-gray-300  px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" >
                             Generate CSV
                         </button>
                     </span>
@@ -93,7 +134,7 @@ const ViewOutlet = () => {
                             <div class=" p-5 ">
                                 <p className='text-gray-500 font-bold tracking-wide text-base text-medium'>SALES</p>
                                 <p className='text-gray-500  font-medium text-sm'>Total sales today</p>
-                                <h1 className="text-4xl font-semibold text-center mt-6">NPR 27327.0</h1>
+                                <h1 className="text-4xl font-semibold text-center mt-6">NPR {DailySales.Dailysale}</h1>
                             </div>
                         </li>
                     </ul>
