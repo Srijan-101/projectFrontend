@@ -47,7 +47,6 @@ const MenuTable = ({Flag,setFlag}) => {
         GetMenu()
             .then(res => {
                 let dataMenu = res.data;
-
                 setMenu((preState) => {
                     return { dataMenu }
                 })

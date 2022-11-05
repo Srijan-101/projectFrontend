@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 import { FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faHouse,faUtensils} from '@fortawesome/free-solid-svg-icons'
-
+import { signOut } from '../../Helper/helper'
 
 import { BsArrowLeftCircle } from 'react-icons/bs'
 import { FaRegSun } from 'react-icons/fa'
@@ -16,12 +16,16 @@ const Sidebar = () => {
     const [open, setOpen] = useState(false)
     const location = useLocation()
 
+    const Logout = () => {
+        signOut();
+        window.location.reload();
+    }
+
     const Menus = [
         { title: 'Home', path: '/', src: <FontAwesomeIcon icon={faHouse} />},
         { title: 'Menu', path: '/menu',  src: <FontAwesomeIcon icon={faUtensils} />},
         {title: 'Tables' , path:'/tables',src: <MdChair/>},
-        { title: 'Settings', path: '/Settings', src: <FaRegSun />},
-        { title: 'Logout', path: '/signout', src: <TbLogout />},
+        // { title: 'Settings', path: '/Settings', src: <FaRegSun />},
     ]
 
     return (
@@ -59,6 +63,15 @@ const Sidebar = () => {
                             </li>
                         </Link>
                     ))}
+                     <li className="flex items-center gap-x-6 p-3 text-base font-medium rounded-lg cursor-pointer text-black" onClick={Logout}>
+                        <span className='text-xl'><TbLogout /></span>
+                        <span
+                            className={`${!open && 'hidden'
+                                } origin-left duration-300  hover:block ml-[1px]`}
+                        >
+                            Logout
+                        </span>
+                    </li>
                 </ul>
             </div>
         </>

@@ -28,7 +28,7 @@ const Sidebar = () => {
         { title: 'Workers', path: '/Workers', src: <FaUsers /> },
         { title: 'Menu', path: '/menu',  src: <FontAwesomeIcon icon={faUtensils} />},
         {title: 'Tables' , path:'/tables',src: <MdChair/>},
-        { title: 'Settings', path: '/Setting', src: <FaRegSun />},
+        // { title: 'Settings', path: '/Setting', src: <FaRegSun />},
     ]
 
     return (

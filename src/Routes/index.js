@@ -9,37 +9,21 @@ import {
 } from '../AuthComp/Index'
 
 
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 import PublicRoute from './PublicRoutes'
 import RequireAuth from './RequireAuth';
-import { isAuth } from '../Helper/helper'
+
 
 //Routes Guard
 import ActivateGuard from './ActivateGuard'
 import RoleGuard from './RoleGuard'
-
-
-//Admin Routes 
-import Layout from '../Dashboard-admin/components/Layout'
-import Background from '../Dashboard-admin/components/Background'
-import { Home, Worker, Setting, Profile, ViewOutlet } from '../Dashboard-admin/index'
-
-//Manager Routes
-import LayoutManager from '../Dashboard-manager/components/Layout'
-import BackgroundManager from '../Dashboard-manager/components/Background'
-
-import {
-    Worker as ManagerWorker,
-    Setting as ManagerSetting,
-    Profile as ManagerProfile,
-    Tables as ManagerTables,
-    Menu as ManagerMenu
-} from '../Dashboard-manager/index'
+import WorkersGuard from './WorkersGuard'
+import MenuGuard from './MenuGuard';
+import TablesGuard from './TablesGuard';
 import PostGuard from './PostGuard';
-
-
-
-
+import AddOutletGuard from './AddOutletGuard'
+import ViewoutletGuard from './ViewOutletGuard';
+import TablePageGuard  from './TablePage'
 
 
 const MainRoutes = () => {
@@ -67,7 +51,6 @@ const MainRoutes = () => {
             <Route element={<PublicRoute restriction={true} />}>
                 <Route exact path="ResetPassword/:token" element={<ResetPassword />} />
             </Route>
-
         
 
         //Private Routes
@@ -81,21 +64,19 @@ const MainRoutes = () => {
                 </Route>
             </Route>
 
-           
-
+           //viewOutletByid only by Admin
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="viewOutlet/:id"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><ViewOutlet /></Layout></Background>
-                                : null
-                            }
-                        />
+                        <Route path="viewOutlet/:id" element={<ViewoutletGuard/>}/>
                     </Route>
                 </Route>
             </Route>
 
+
+
+
+           //Home page for everyone
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
@@ -104,71 +85,51 @@ const MainRoutes = () => {
                 </Route>
             </Route>
 
+            //Workers guard only for Manager and Admin
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="Workers"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><Worker /></Layout></Background>
-                                : <BackgroundManager><LayoutManager><ManagerProfile /></LayoutManager></BackgroundManager>
-                            }
-                        />
+                        <Route path="Workers" element={<WorkersGuard/>}/>
                     </Route>
                 </Route>
             </Route>
 
+            //Menu for Manager and Waiter
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="Profile"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><Profile /></Layout></Background>
-                                : <BackgroundManager><LayoutManager><ManagerProfile /></LayoutManager></BackgroundManager>
-                            }
-                        />
+                        <Route element={<MenuGuard/>} path="Menu"/>
                     </Route>
                 </Route>
             </Route>
 
-
+            //Tables for Manager and Waiter
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="Menu"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><Profile /></Layout></Background>
-                                : <BackgroundManager><LayoutManager><ManagerMenu /></LayoutManager></BackgroundManager>
-                            }
-                        />
+                        <Route element={<TablesGuard/>} path="Tables"/>
                     </Route>
                 </Route>
             </Route>
 
+            //AddOutlet only for Admin
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="Tables"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><Profile /></Layout></Background>
-                                : <BackgroundManager><LayoutManager><ManagerTables /></LayoutManager></BackgroundManager>
-                            }
-                        />
+                        <Route element={<AddOutletGuard/>} path="Profile"/>
                     </Route>
                 </Route>
             </Route>
 
+            //TablePage
             <Route element={<RequireAuth />}>
                 <Route element={<ActivateGuard />}>
                     <Route element={<PostGuard />}>
-                        <Route path="Setting"
-                            element={isAuth().role === "Admin"
-                                ? <Background><Layout><Setting /></Layout></Background>
-                                : <BackgroundManager><LayoutManager><ManagerSetting /></LayoutManager></BackgroundManager>
-                            }
-                        />
+                        <Route element={<TablePageGuard/>} path="Table/:id"/>
                     </Route>
                 </Route>
             </Route>
+            
         </Routes>
     )
 }
